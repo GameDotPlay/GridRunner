@@ -1,0 +1,152 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch GridRunner (Debug)",
+			"request": "launch",
+			"program": "C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
+			"preLaunchTask": "GridRunner Win64 Debug Build",
+			"args": [
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunner (DebugGame)",
+			"request": "launch",
+			"program": "C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
+			"preLaunchTask": "GridRunner Win64 DebugGame Build",
+			"args": [
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunner (Development)",
+			"request": "launch",
+			"program": "C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\Binaries\\Win64\\UnrealGame.exe",
+			"preLaunchTask": "GridRunner Win64 Development Build",
+			"args": [
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunner (Test)",
+			"request": "launch",
+			"program": "C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
+			"preLaunchTask": "GridRunner Win64 Test Build",
+			"args": [
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunner (Shipping)",
+			"request": "launch",
+			"program": "C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
+			"preLaunchTask": "GridRunner Win64 Shipping Build",
+			"args": [
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunnerEditor (Debug)",
+			"request": "launch",
+			"program": "C:\\Epic Games\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
+			"preLaunchTask": "GridRunnerEditor Win64 Debug Build",
+			"args": [
+				"C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\GridRunner.uproject"
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunnerEditor (DebugGame)",
+			"request": "launch",
+			"program": "C:\\Epic Games\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
+			"preLaunchTask": "GridRunnerEditor Win64 DebugGame Build",
+			"args": [
+				"C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\GridRunner.uproject"
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch GridRunnerEditor (Development)",
+			"request": "launch",
+			"program": "C:\\Epic Games\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+			"preLaunchTask": "GridRunnerEditor Win64 Development Build",
+			"args": [
+				"C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\GridRunner.uproject"
+			],
+			"cwd": "C:\\Epic Games\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Epic Games\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "C:\\Epic Games\\UE_5.0"
+			}
+		},
+		{
+			"name": "Generate Project Files",
+			"type": "coreclr",
+			"request": "launch",
+			"program": "C:\\Epic Games\\UE_5.0\\Engine\\Binaries\\DotNET\\UnrealBuildTool\\UnrealBuildTool",
+			"args": [
+				"-projectfiles",
+				"-vscode",
+				"-project=C:\\Users\\erich\\Documents\\Unreal Projects\\GridRunner\\GridRunner.uproject",
+				"-game",
+				"-engine"
+			],
+			"console": "externalTerminal",
+			"stopAtEntry": false,
+			"cwd": "C:\\Epic Games\\UE_5.0"
+		}
+	]
+}
