@@ -13,7 +13,8 @@ class AGridRunnerGameMode : public AGameModeBase
 
 public:
 	AGridRunnerGameMode();
+
+	int32 PlayerFlags;
+	int32 OpponentFlags;
+	int32 FlagsREquiredToWin;
 };
-
-
-
