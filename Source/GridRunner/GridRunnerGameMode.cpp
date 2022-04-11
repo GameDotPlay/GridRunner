@@ -2,3 +2,8 @@
 
 #include "GridRunnerGameMode.h"
 #include "GridRunnerCharacter.h"
+
+AGridRunnerGameMode::AGridRunnerGameMode()
+{
+	
+}
