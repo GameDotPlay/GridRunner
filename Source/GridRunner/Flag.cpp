@@ -3,6 +3,7 @@
 #include "Flag.h"
 #include "Components/SphereComponent.h"
 #include "GridRunnerGameMode.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 AFlag::AFlag()
@@ -21,12 +22,26 @@ AFlag::AFlag()
 void AFlag::BeginPlay()
 {
 	Super::BeginPlay();
+
+	this->FlagMaterial = UMaterialInstanceDynamic::Create(this->FlagMesh->GetMaterial(0),this);
 	
+	this->SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AFlag::FlagClaimed); 
 }
 
 // Called every frame
 void AFlag::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void AFlag::FlagClaimed(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!this->FlagMaterial)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FlagMaterial is null"));
+		return;
+	}
+
+	this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), FColor::Red);
+	UE_LOG(LogTemp, Warning, TEXT("In FlagClaimed()"));
 }
