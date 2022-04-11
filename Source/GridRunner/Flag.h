@@ -24,7 +24,9 @@ protected:
 
 private:	
 
+	UPROPERTY(EditAnywhere, Category = "Flag")
 	class USphereComponent* SphereComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Flag")
 	class UStaticMeshComponent* FlagMesh;
 };

@@ -14,6 +14,7 @@ AFlag::AFlag()
 	this->SetRootComponent(this->SphereComponent);
 
 	this->FlagMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlagMesh"));
+	this->FlagMesh->SetupAttachment(this->RootComponent);
 }
 
 // Called when the game starts or when spawned
