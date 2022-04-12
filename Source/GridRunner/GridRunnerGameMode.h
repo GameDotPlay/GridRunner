@@ -14,7 +14,16 @@ class AGridRunnerGameMode : public AGameModeBase
 public:
 	AGridRunnerGameMode();
 
-	int32 PlayerFlags;
-	int32 OpponentFlags;
-	int32 FlagsREquiredToWin;
+	void FlagCaptured(const AActor* ActorThatCaptured);
+
+protected:
+
+	virtual void BeginPlay() override;
+
+private:
+
+	class APawn* PlayerCharacter = nullptr;
+	int32 PlayerFlags = 0;
+	int32 OpponentFlags = 0;
+	int32 FlagsREquiredToWin = 0;
 };

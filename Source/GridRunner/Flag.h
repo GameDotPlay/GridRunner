@@ -19,7 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void FlagClaimed(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void FlagTouched(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,10 +28,20 @@ protected:
 private:	
 
 	UPROPERTY(EditAnywhere, Category = "Flag")
-	class USphereComponent* SphereComponent;
+	class USphereComponent* SphereComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Flag")
-	class UStaticMeshComponent* FlagMesh;
+	class UStaticMeshComponent* FlagMesh = nullptr;
 
-	class UMaterialInstanceDynamic* FlagMaterial;
+	class UMaterialInstanceDynamic* FlagMaterial = nullptr;
+
+	class AGridRunnerGameMode* GameMode = nullptr;
+
+	class APawn* PlayerPawn = nullptr;
+
+	FColor PlayerCaptured = FColor::Blue;
+
+	FColor OpponentCaptured = FColor::Red;
+
+	FColor Nuetral = FColor::White;
 };
