@@ -12,6 +12,8 @@ AGridRunnerGameMode::AGridRunnerGameMode()
 
 void AGridRunnerGameMode::BeginPlay()
 {
+    Super::BeginPlay();
+    
     this->PlayerCharacter = UGameplayStatics::GetPlayerPawn(this, 0);
 }
 
