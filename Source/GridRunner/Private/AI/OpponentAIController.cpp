@@ -13,6 +13,8 @@ void AOpponentAIController::BeginPlay()
     APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
     if (Player)
     {
-        this->GetBlackboardComponent()->SetValueAsVector("MoveToLocation", Player->GetActorLocation());
+        this->GetBlackboardComponent()->SetValueAsVector(FName(TEXT("MoveToLocation")), Player->GetActorLocation());
+
+        this->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("TargetActor")), Player);
     }
 }
