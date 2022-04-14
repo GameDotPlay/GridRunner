@@ -14,7 +14,17 @@ class AGridRunnerGameMode : public AGameModeBase
 public:
 	AGridRunnerGameMode();
 
+	UFUNCTION()
 	void FlagCaptured(const AActor* ActorThatCaptured);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
+	int32 PlayerFlags = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
+	int32 OpponentFlags = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
+	int32 FlagsREquiredToWin = 0;
 
 protected:
 
@@ -23,7 +33,4 @@ protected:
 private:
 
 	class APawn* PlayerCharacter = nullptr;
-	int32 PlayerFlags = 0;
-	int32 OpponentFlags = 0;
-	int32 FlagsREquiredToWin = 0;
 };
