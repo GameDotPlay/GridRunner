@@ -11,9 +11,6 @@
 // Sets default values
 AFlag::AFlag()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-
 	this->SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	this->SetRootComponent(this->SphereComponent);
 
@@ -27,15 +24,9 @@ void AFlag::BeginPlay()
 	Super::BeginPlay();
 
 	this->GameMode = Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this));
-	this->FlagMaterial = UMaterialInstanceDynamic::Create(this->FlagMesh->GetMaterial(0),this);
 	this->SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AFlag::FlagTouched);
 	this->PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
-}
-
-// Called every frame
-void AFlag::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	this->FlagMaterial = UMaterialInstanceDynamic::Create(this->FlagMesh->GetMaterial(0), this);
 }
 
 void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -48,6 +39,19 @@ void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	FLinearColor CurrentFlagColor;
 	FHashedMaterialParameterInfo MaterialParamterInfo(FName(TEXT("BaseColor")));
 	this->FlagMesh->GetMaterial(0)->GetVectorParameterValue(MaterialParamterInfo, OUT CurrentFlagColor);
+	this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), CurrentFlagColor);
+
+	if (!this->PlayerPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerPawn null"));
+		return;
+	}
+
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OtherActor null"));
+		return;
+	}
 
 	if (OtherActor == this->PlayerPawn) // Player touched flag.
 	{

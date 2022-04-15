@@ -1,10 +1,10 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GridRunnerGameMode.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFlagCaptured);
 
 UCLASS(minimalapi)
 class AGridRunnerGameMode : public AGameModeBase
@@ -12,6 +12,10 @@ class AGridRunnerGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FOnFlagCaptured OnFlagCaptured;
+
 	AGridRunnerGameMode();
 
 	UFUNCTION()
@@ -24,7 +28,7 @@ public:
 	int32 OpponentFlags = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
-	int32 FlagsREquiredToWin = 0;
+	int32 FlagsRequiredToWin = 4;
 
 protected:
 

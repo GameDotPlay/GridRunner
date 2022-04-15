@@ -15,9 +15,6 @@ public:
 	// Sets default values for this actor's properties
 	AFlag();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void FlagTouched(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -27,10 +24,10 @@ protected:
 
 private:	
 
-	UPROPERTY(EditAnywhere, Category = "Flag")
+	UPROPERTY(EditDefaultsOnly, Category = "Flag")
 	class USphereComponent* SphereComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Flag")
+	UPROPERTY(EditDefaultsOnly, Category = "Flag")
 	class UStaticMeshComponent* FlagMesh = nullptr;
 
 	class UMaterialInstanceDynamic* FlagMaterial = nullptr;
@@ -43,5 +40,5 @@ private:
 
 	FColor OpponentCaptured = FColor::Red;
 
-	FColor Nuetral = FColor::White;
+	FColor Neutral = FColor::White;
 };

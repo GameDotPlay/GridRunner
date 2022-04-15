@@ -21,7 +21,6 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
 {
     if (ActorThatCaptured == this->PlayerCharacter)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Player captured!"), this->PlayerFlags, this->OpponentFlags);
         this->PlayerFlags++;
 
         if (this->OpponentFlags > 0)
@@ -31,7 +30,6 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("Opponent captured!"), this->PlayerFlags, this->OpponentFlags);
         this->OpponentFlags++;
 
         if (this->PlayerFlags > 0)
@@ -40,5 +38,5 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
         }
     }
 
-    UE_LOG(LogTemp, Warning, TEXT("Player: %i | Opponent: %i"), this->PlayerFlags, this->OpponentFlags);
+    this->OnFlagCaptured.Broadcast();
 }
