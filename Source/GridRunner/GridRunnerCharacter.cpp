@@ -44,6 +44,9 @@ AGridRunnerCharacter::AGridRunnerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	this->CharacterIsIt = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CharacterIsIt"));
+	this->CharacterIsIt->SetupAttachment(this->RootComponent);
 }
 
 void AGridRunnerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -80,5 +83,27 @@ void AGridRunnerCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AGridRunnerCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (!this->CharacterIsIt)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Letter X is null"));
+		return;
+	}
+
+	if (this->bIsIt)
+	{
+		this->CharacterIsIt->bHiddenInGame = false;
+
+		this->CharacterIsIt->AddWorldRotation(FRotator(0, this->XRotateSpeed * DeltaSeconds, 0));
+	}
+	else
+	{
+		this->CharacterIsIt->bHiddenInGame = true;
 	}
 }

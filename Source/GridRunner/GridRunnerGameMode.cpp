@@ -40,3 +40,15 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
 
     this->OnFlagCaptured.Broadcast();
 }
+
+void AGridRunnerGameMode::AssignIt(const AActor* ActorThatCaptured) const
+{
+    if (ActorThatCaptured == this->PlayerCharacter)
+    {
+        
+    }
+    else
+    {
+        
+    }
+}
