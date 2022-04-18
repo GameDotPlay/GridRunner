@@ -25,7 +25,7 @@ public:
 	FOnOpponentCaptured OnOpponentCaptured;
 
 	AGridRunnerGameMode();
-	
+
 	UFUNCTION()
 	void FlagCaptured(const AActor* ActorThatCaptured);
 
