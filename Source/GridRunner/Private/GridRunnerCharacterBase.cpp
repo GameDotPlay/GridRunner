@@ -12,7 +12,6 @@ AGridRunnerCharacterBase::AGridRunnerCharacterBase()
 void AGridRunnerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AGridRunnerCharacterBase::Tick(float DeltaSeconds)
@@ -22,6 +21,7 @@ void AGridRunnerCharacterBase::Tick(float DeltaSeconds)
 	if (this->bIsIt)
 	{
 		this->CharacterIsIt->bHiddenInGame = false;
+		this->CharacterIsIt->SetWorldLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 100.f));
 		this->CharacterIsIt->AddWorldRotation(FRotator(0, this->XRotateSpeed * DeltaSeconds, 0));
 	}
 	else

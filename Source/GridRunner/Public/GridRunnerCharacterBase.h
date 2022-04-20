@@ -21,8 +21,6 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-private:
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* CharacterIsIt;
 
@@ -32,5 +30,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	float RunSpeed = 300.f;
 
-	bool bIsIt = true;	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
+	bool bIsIt = true;
+
+private:	
+
 };
