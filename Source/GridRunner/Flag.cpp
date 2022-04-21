@@ -5,6 +5,7 @@
 #include "GridRunnerGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "GridRunnerCharacterBase.h"
 
 #define OUT
 
@@ -25,13 +26,17 @@ void AFlag::BeginPlay()
 
 	this->GameMode = Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this));
 	this->SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AFlag::FlagTouched);
-	this->PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
 	this->FlagMaterial = UMaterialInstanceDynamic::Create(this->FlagMesh->GetMaterial(0), this);
 }
 
 void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!Cast<APawn>(OtherActor))
+	if (!ensure(OtherActor))
+	{
+		return; // OtherActor is null.
+	}
+
+	if (!Cast<AGridRunnerCharacterBase>(OtherActor))
 	{
 		return; // Actor is not the player or the opponent. Do nothing.
 	}
@@ -41,32 +46,20 @@ void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	this->FlagMesh->GetMaterial(0)->GetVectorParameterValue(MaterialParamterInfo, OUT CurrentFlagColor);
 	this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), CurrentFlagColor);
 
-	if (!this->PlayerPawn)
+	if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsPlayer) // Player touched flag.
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerPawn null"));
-		return;
-	}
-
-	if (!OtherActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("OtherActor null"));
-		return;
-	}
-
-	if (OtherActor == this->PlayerPawn) // Player touched flag.
-	{
-		if (CurrentFlagColor == this->PlayerCaptured)
+		if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt || CurrentFlagColor == this->PlayerCaptured)
 		{
-			return; // Flag is already controlled by player. Do nothing.
+			return; // Player is "IT" or they already have this flag. Do nothing.
 		}
 
 		this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), this->PlayerCaptured);
 	}
 	else // Opponent touched flag.
 	{
-		if (CurrentFlagColor == this->OpponentCaptured)
+		if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt || CurrentFlagColor == this->OpponentCaptured)
 		{
-			return; // Flag is already controlled by opponent. Do nothing.
+			return; // Opponent is "IT" or they already have this flag. Do nothing.
 		}
 
 		this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), this->OpponentCaptured);

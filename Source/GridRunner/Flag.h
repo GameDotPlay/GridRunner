@@ -34,8 +34,6 @@ private:
 
 	class AGridRunnerGameMode* GameMode = nullptr;
 
-	class APawn* PlayerPawn = nullptr;
-
 	FColor PlayerCaptured = FColor::Blue;
 
 	FColor OpponentCaptured = FColor::Red;
