@@ -1,12 +1,15 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GridRunnerGameMode.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFlagCaptured);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerCaptured);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpponentCaptured);
+class AAICharacter;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerFlagsChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpponentFlagsChanged);
 
 UCLASS(minimalapi)
 class AGridRunnerGameMode : public AGameModeBase
@@ -14,20 +17,17 @@ class AGridRunnerGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(BlueprintAssignable)
-	FOnFlagCaptured OnFlagCaptured;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnPlayerCaptured OnPlayerCaptured;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnOpponentCaptured OnOpponentCaptured;
-
 	AGridRunnerGameMode();
 
-	UFUNCTION()
 	void FlagCaptured(const AActor* ActorThatCaptured);
+
+	void CacheOpponentCharacter(AAICharacter* Opponent);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerFlagsChanged OnPlayerFlagsChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnOpponentFlagsChanged OnOpponentFlagsChanged;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
 	int32 PlayerFlags = 0;
@@ -36,7 +36,7 @@ public:
 	int32 OpponentFlags = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
-	int32 FlagsRequiredToWin = 4;
+	int32 FlagsRequiredToWin = 0;
 
 protected:
 
@@ -44,7 +44,6 @@ protected:
 
 private:
 
-	class APawn* PlayerCharacter = nullptr;
-
-	void AssignIt(const AActor* ActorThatCaptured) const;
+	class APlayerCharacter* PlayerCharacter = nullptr;
+	class AAICharacter* OpponentCharacter = nullptr;
 };
