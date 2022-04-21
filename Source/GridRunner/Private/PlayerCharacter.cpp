@@ -30,6 +30,8 @@ void APlayerCharacter::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
 	this->bIsPlayer = true;
+
+	this->GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OtherCharacterTouched);
 }
 
 // Called every frame
@@ -76,4 +78,26 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &APlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &APlayerCharacter::MoveRight);
+}
+
+void APlayerCharacter::OtherCharacterTouched(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!ensure(OtherActor))
+	{
+		return; // OtherActor is null.
+	}
+
+	auto OtherCharacter = Cast<AGridRunnerCharacterBase>(OtherActor);
+	if (!OtherCharacter)
+	{
+		return; // OtherActor is not the player or the opponent. Do nothing...for now.
+	}
+
+	if (!this->bIsIt && !OtherCharacter->bIsIt)
+	{
+		return; // Neither character is IT yet. Do nothing.
+	}
+
+	OtherCharacter->bIsIt = !OtherCharacter->bIsIt;
+	this->bIsIt = !this->bIsIt;
 }
