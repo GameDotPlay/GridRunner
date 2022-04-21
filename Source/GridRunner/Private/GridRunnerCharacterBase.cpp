@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GridRunnerCharacterBase.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AGridRunnerCharacterBase::AGridRunnerCharacterBase()
@@ -12,6 +13,8 @@ AGridRunnerCharacterBase::AGridRunnerCharacterBase()
 void AGridRunnerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	this->GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGridRunnerCharacterBase::OtherCharacterTouched);
 }
 
 void AGridRunnerCharacterBase::Tick(float DeltaSeconds)
@@ -27,5 +30,29 @@ void AGridRunnerCharacterBase::Tick(float DeltaSeconds)
 	else
 	{
 		this->CharacterIsIt->bHiddenInGame = true;
+	}
+}
+
+void AGridRunnerCharacterBase::OtherCharacterTouched(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!ensure(OtherActor))
+	{
+		return; // OtherActor is null.
+	}
+
+	if (!Cast<AGridRunnerCharacterBase>(OtherActor))
+	{
+		return; // OtherActor is not the player or the opponent. Do nothing...for now.
+	}
+
+	if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt) // We got tagged.
+	{
+		Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt = false;
+		this->bIsIt = true;
+	}
+	else
+	{
+		Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt = true;
+		this->bIsIt = false;
 	}
 }
