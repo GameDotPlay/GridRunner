@@ -14,7 +14,11 @@ void AAICharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
     
-    Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this))->CacheOpponentCharacter(this);
+    auto GameMode = Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this));
+    if (GameMode)
+    {
+        GameMode->CacheOpponentCharacter(this);
+    }
 }
 
 void AAICharacter::BeginPlay()
