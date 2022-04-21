@@ -36,7 +36,8 @@ void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		return; // OtherActor is null.
 	}
 
-	if (!Cast<AGridRunnerCharacterBase>(OtherActor))
+	auto CharacterThatTouched = Cast<AGridRunnerCharacterBase>(OtherActor);
+	if (!CharacterThatTouched)
 	{
 		return; // Actor is not the player or the opponent. Do nothing.
 	}
@@ -46,9 +47,9 @@ void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	this->FlagMesh->GetMaterial(0)->GetVectorParameterValue(MaterialParamterInfo, OUT CurrentFlagColor);
 	this->FlagMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), CurrentFlagColor);
 
-	if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsPlayer) // Player touched flag.
+	if (CharacterThatTouched->bIsPlayer) // Player touched flag.
 	{
-		if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt || CurrentFlagColor == this->PlayerCaptured)
+		if (CharacterThatTouched->bIsIt || CurrentFlagColor == this->PlayerCaptured)
 		{
 			return; // Player is "IT" or they already have this flag. Do nothing.
 		}
@@ -57,7 +58,7 @@ void AFlag::FlagTouched(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	}
 	else // Opponent touched flag.
 	{
-		if (Cast<AGridRunnerCharacterBase>(OtherActor)->bIsIt || CurrentFlagColor == this->OpponentCaptured)
+		if (CharacterThatTouched->bIsIt || CurrentFlagColor == this->OpponentCaptured)
 		{
 			return; // Opponent is "IT" or they already have this flag. Do nothing.
 		}
