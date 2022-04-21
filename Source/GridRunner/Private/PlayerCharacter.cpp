@@ -29,6 +29,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
+	this->bIsPlayer = true;
 }
 
 // Called every frame
