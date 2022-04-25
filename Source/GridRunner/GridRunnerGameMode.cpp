@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GridRunnerGameMode.h"
-#include "GridRunnerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "AI/AICharacter.h"
