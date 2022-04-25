@@ -19,6 +19,9 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 
+	OpponentArrowIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OpponentArrowIndicator"));
+	OpponentArrowIndicator->SetupAttachment(RootComponent);
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 1200.f;
 }
