@@ -15,7 +15,6 @@ public:
 	// Sets default values for this character's properties
 	AGridRunnerCharacterBase();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	bool bIsIt = false;
 
 	bool bIsPlayer = false;
