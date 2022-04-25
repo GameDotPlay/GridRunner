@@ -21,7 +21,7 @@ public:
 
 	void FlagCaptured(const AActor* ActorThatCaptured);
 
-	void CacheOpponentCharacter(AAICharacter* Opponent);
+	//void CacheOpponentCharacter(AAICharacter* Opponent);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerFlagsChanged OnPlayerFlagsChanged;
@@ -36,7 +36,7 @@ public:
 	int32 OpponentFlags = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Flags")
-	int32 FlagsRequiredToWin = 0;
+	int32 FlagsRequiredToWin = 5;
 
 protected:
 
@@ -44,6 +44,6 @@ protected:
 
 private:
 
-	class APlayerCharacter* PlayerCharacter = nullptr;
-	class AAICharacter* OpponentCharacter = nullptr;
+	class AGridRunnerCharacterBase* PlayerCharacter = nullptr;
+	class AGridRunnerCharacterBase* OpponentCharacter = nullptr;
 };

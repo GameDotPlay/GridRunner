@@ -2,8 +2,7 @@
 
 #include "GridRunnerGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerCharacter.h"
-#include "AI/AICharacter.h"
+#include "GridRunnerCharacterBase.h"
 
 AGridRunnerGameMode::AGridRunnerGameMode()
 {
@@ -14,7 +13,22 @@ void AGridRunnerGameMode::BeginPlay()
 {
     Super::BeginPlay();
     
-    this->PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	// Get reference to player and opponent characters.
+	TArray<AActor*> Characters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridRunnerCharacterBase::StaticClass(), Characters);
+	for (int i = 0; i < Characters.Num(); i++)
+	{
+		// Iterate through all actors returned (Should only be 2). First one to not be player is the opponent.
+		auto Character = Cast<AGridRunnerCharacterBase>(Characters[i]);
+		if (Character->bIsPlayer)
+		{
+			this->PlayerCharacter = Character;
+		}
+        else
+        {
+            this->OpponentCharacter = Character;
+        }
+	}
 
     ensureMsgf(this->PlayerCharacter, TEXT("GameMode::PlayerCharacter is null."));
     ensureMsgf(this->OpponentCharacter, TEXT("GameMode::OpponentCharacter is null"));
@@ -66,10 +80,10 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
     }
 }
 
-void AGridRunnerGameMode::CacheOpponentCharacter(AAICharacter* Opponent)
-{
-    if (ensureMsgf(Opponent, TEXT("Opponent reference is null.")))
-    {
-        this->OpponentCharacter = Opponent;
-    }
-}
+//void AGridRunnerGameMode::CacheOpponentCharacter(AAICharacter* Opponent)
+//{
+//    if (ensureMsgf(Opponent, TEXT("Opponent reference is null.")))
+//    {
+//        this->OpponentCharacter = Opponent;
+//    }
+//}
