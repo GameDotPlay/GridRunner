@@ -13,6 +13,8 @@
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
+	this->bIsPlayer = true;
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -33,7 +35,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
-	this->bIsPlayer = true;
 
 	// Bind method to OnComponentBeginOverlap.
 	this->GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OtherCharacterTouched);

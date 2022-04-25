@@ -7,7 +7,7 @@
 
 AAICharacter::AAICharacter()
 {
-    
+	this->bIsPlayer = false;
 }
 
 void AAICharacter::BeginPlay()
@@ -15,13 +15,12 @@ void AAICharacter::BeginPlay()
     Super::BeginPlay();
 
     GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
-    this->bIsPlayer = false;
-
-    auto GameMode = Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this));
-    if (GameMode)
-    {
-        GameMode->CacheOpponentCharacter(this);
-    }
+    
+	/*auto GameMode = Cast<AGridRunnerGameMode>(UGameplayStatics::GetGameMode(this));
+	if (GameMode)
+	{
+		GameMode->CacheOpponentCharacter(this);
+	}*/
 }
 
 void AAICharacter::Tick(float DeltaSeconds)
