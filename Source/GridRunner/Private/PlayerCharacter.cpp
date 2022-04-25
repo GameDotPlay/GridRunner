@@ -7,6 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "AIController.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -20,7 +22,6 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 
 	OpponentArrowIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OpponentArrowIndicator"));
-	OpponentArrowIndicator->SetupAttachment(RootComponent);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 1200.f;
@@ -34,25 +35,97 @@ void APlayerCharacter::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
 	this->bIsPlayer = true;
 
+	// Bind method to OnComponentBeginOverlap.
 	this->GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OtherCharacterTouched);
+
+	// Get reference to opponent character.
+	TArray<AActor*> Characters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridRunnerCharacterBase::StaticClass(), Characters);
+	for (int i = 0; i < Characters.Num(); i++)
+	{
+		// Iterate through all actors returned (Should only be 2). First one to not be player is the opponent.
+		auto Opponent = Cast<AGridRunnerCharacterBase>(Characters[i]);
+		if (!Opponent->bIsPlayer)
+		{
+			this->OpponentCharacter = Opponent;
+			break;
+		}
+	}
+
+	// Get reference to the arrow material.
+	this->ArrowMaterial = UMaterialInstanceDynamic::Create(this->OpponentArrowIndicator->GetMaterial(0), this);
 }
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	this->UpdateArrowIndicator();
+}
+
+bool APlayerCharacter::IsOpponentOnScreen()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(this->GetController());
+	FVector2D ScreenPosition;
+	FVector OpponentOrigin;
+	FVector BoxExtent;
+	this->OpponentCharacter->GetActorBounds(false, OpponentOrigin, BoxExtent, false);
+	UGameplayStatics::ProjectWorldToScreen(PlayerController, OpponentOrigin, ScreenPosition);
+
+	int32 ViewportSizeX;
+	int32 ViewportSizeY;
+	PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+
+	return ScreenPosition.X + BoxExtent.X > 0 && ScreenPosition.Y + BoxExtent.Y > 0 && ScreenPosition.X - BoxExtent.X < (int32)ViewportSizeX && ScreenPosition.Y - BoxExtent.Y < (int32)ViewportSizeY;
+}
+
+void APlayerCharacter::UpdateArrowIndicator()
+{
+	if (IsOpponentOnScreen())
+	{
+		this->OpponentArrowIndicator->SetHiddenInGame(true);
+	}
+	else
+	{
+		this->OpponentArrowIndicator->SetHiddenInGame(false);
+	}
+
+	if (!this->OpponentArrowIndicator->bHiddenInGame)
+	{
+		FVector LineToOpponent = this->OpponentCharacter->GetActorLocation() - this->GetActorLocation();
+		LineToOpponent.Normalize();
+		LineToOpponent *= this->ArrowRadius;
+		FRotator YawOffset(0.f, 0.f, 0.f);
+		if (this->bIsIt)
+		{
+			this->ArrowMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), FColor::Green);
+			YawOffset.Yaw = 180.f;
+		}
+		else
+		{
+			this->ArrowMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), FColor::Red);
+		}
+
+		FVector HeightOffset = FVector(0.f, 0.f, this->ArrowHeightOffset);
+		this->OpponentArrowIndicator->SetWorldRotation(LineToOpponent.Rotation() + YawOffset);
+		this->OpponentArrowIndicator->SetWorldLocation(this->GetActorLocation() + LineToOpponent + HeightOffset);
+		this->OpponentArrowIndicator->SetMaterial(0, this->ArrowMaterial);
+	}
 }
 
 void APlayerCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
-		// find out which way is forward
+		// Find out which way is forward.
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
+		// Get forward vector.
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		// Add movement in that direction.
 		AddMovementInput(Direction, Value);
 	}
 }
@@ -61,18 +134,19 @@ void APlayerCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
-		// find out which way is right
+		// Find out which way is right.
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 	
-		// get right vector 
+		// Get right vector. 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
+		
+		// Add movement in that direction.
 		AddMovementInput(Direction, Value);
 	}
 }
 
-// Called to bind functionality to input
+// Called to bind functionality to input.
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

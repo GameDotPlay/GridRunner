@@ -6,6 +6,8 @@
 #include "GridRunnerCharacterBase.h"
 #include "PlayerCharacter.generated.h"
 
+class UMaterialInstanceDynamic;
+
 UCLASS()
 class GRIDRUNNER_API APlayerCharacter : public AGridRunnerCharacterBase
 {
@@ -37,13 +39,27 @@ protected:
 private:
 
 	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* OpponentArrowIndicator;
+
+	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
+	float ArrowRadius = 250.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
+	float ArrowHeightOffset = 80.f;
+
+	AGridRunnerCharacterBase* OpponentCharacter;
+
+	UMaterialInstanceDynamic* ArrowMaterial;
+
+	bool IsOpponentOnScreen();
+
+	void UpdateArrowIndicator();
 };
