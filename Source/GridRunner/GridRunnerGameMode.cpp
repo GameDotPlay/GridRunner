@@ -48,7 +48,10 @@ void AGridRunnerGameMode::HandleStart()
 
     // Activate timer for 3 second countdown.
     FTimerHandle PlayerEnableTimerHandle;
-    //FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject()
+    FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(this->PlayerController, &AGridRunnerPlayerController::SetPlayerEnabledState, true);
+
+    this->StartGame();
+    GetWorldTimerManager().SetTimer(PlayerEnableTimerHandle, PlayerEnableTimerDelegate, this->StartDelay, false);
 }
 
 void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)

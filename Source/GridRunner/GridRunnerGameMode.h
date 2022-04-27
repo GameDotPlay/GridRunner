@@ -40,6 +40,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartGame();
+
 private:
 
 	class AGridRunnerCharacterBase* PlayerCharacter = nullptr;
@@ -48,4 +51,6 @@ private:
 	class AGridRunnerPlayerController* PlayerController = nullptr;
 
 	void HandleStart();
+
+	float StartDelay = 3.f;
 };
