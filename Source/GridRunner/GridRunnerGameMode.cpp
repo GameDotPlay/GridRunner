@@ -3,6 +3,7 @@
 #include "GridRunnerGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "GridRunnerCharacterBase.h"
+#include "GridRunnerPlayerController.h"
 
 AGridRunnerGameMode::AGridRunnerGameMode()
 {
@@ -32,6 +33,25 @@ void AGridRunnerGameMode::BeginPlay()
 
     ensureMsgf(this->PlayerCharacter, TEXT("GameMode::PlayerCharacter is null."));
     ensureMsgf(this->OpponentCharacter, TEXT("GameMode::OpponentCharacter is null"));
+
+    this->PlayerController = Cast<AGridRunnerPlayerController>(this->PlayerCharacter->GetController());
+
+    ensureMsgf(this->PlayerController, TEXT("GameMode::PlayerController is null"));
+
+    this->HandleStart();
+}
+
+void AGridRunnerGameMode::HandleStart()
+{
+    // Freeze any player input.
+    this->PlayerController->SetPlayerEnabledState(false);
+
+    // Activate timer for 3 second countdown.
+    FTimerHandle PlayerEnableTimerHandle;
+    FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(this->PlayerController, &AGridRunnerPlayerController::SetPlayerEnabledState, true);
+
+    this->StartGame();
+    GetWorldTimerManager().SetTimer(PlayerEnableTimerHandle, PlayerEnableTimerDelegate, this->StartDelay, false);
 }
 
 void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
@@ -79,11 +99,3 @@ void AGridRunnerGameMode::FlagCaptured(const AActor* ActorThatCaptured)
         }
     }
 }
-
-//void AGridRunnerGameMode::CacheOpponentCharacter(AAICharacter* Opponent)
-//{
-//    if (ensureMsgf(Opponent, TEXT("Opponent reference is null.")))
-//    {
-//        this->OpponentCharacter = Opponent;
-//    }
-//}

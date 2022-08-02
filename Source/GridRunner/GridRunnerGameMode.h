@@ -21,8 +21,6 @@ public:
 
 	void FlagCaptured(const AActor* ActorThatCaptured);
 
-	//void CacheOpponentCharacter(AAICharacter* Opponent);
-
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerFlagsChanged OnPlayerFlagsChanged;
 
@@ -42,8 +40,17 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartGame();
+
 private:
 
 	class AGridRunnerCharacterBase* PlayerCharacter = nullptr;
 	class AGridRunnerCharacterBase* OpponentCharacter = nullptr;
+
+	class AGridRunnerPlayerController* PlayerController = nullptr;
+
+	void HandleStart();
+
+	float StartDelay = 3.f;
 };
