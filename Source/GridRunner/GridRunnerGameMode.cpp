@@ -18,7 +18,7 @@ void AGridRunnerGameMode::BeginPlay()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridRunnerCharacterBase::StaticClass(), Characters);
 	for (int i = 0; i < Characters.Num(); i++)
 	{
-		// Iterate through all actors returned (Should only be 2). First one to not be player is the opponent.
+		// Iterate through all actors returned (Should only be 2) and cache references to the player and opponent.
 		auto Character = Cast<AGridRunnerCharacterBase>(Characters[i]);
 		if (Character->bIsPlayer)
 		{
