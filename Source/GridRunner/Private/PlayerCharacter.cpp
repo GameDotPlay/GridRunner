@@ -1,27 +1,25 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "AIController.h"
+#include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+#include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
+#include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputActionValue.h"
 
-// Sets default values
 APlayerCharacter::APlayerCharacter()
 {
 	this->bIsPlayer = true;
 
-	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 
-	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
 	OpponentArrowIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OpponentArrowIndicator"));
 
@@ -29,22 +27,26 @@ APlayerCharacter::APlayerCharacter()
 	GetCharacterMovement()->RotationRate.Yaw = 1200.f;
 }
 
-// Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (APlayerController* PlayerController = Cast<APlayerController>(this->GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(this->DefaultMappingContext, 0);
+		}
+	}
+
 	GetCharacterMovement()->MaxWalkSpeed = this->RunSpeed;
 
-	// Bind method to OnComponentBeginOverlap.
 	this->GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OtherCharacterTouched);
 
-	// Get reference to opponent character.
 	TArray<AActor*> Characters;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridRunnerCharacterBase::StaticClass(), Characters);
 	for (int i = 0; i < Characters.Num(); i++)
 	{
-		// Iterate through all actors returned (Should only be 2). First one to not be player is the opponent.
 		auto Opponent = Cast<AGridRunnerCharacterBase>(Characters[i]);
 		if (!Opponent->bIsPlayer)
 		{
@@ -53,11 +55,9 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 
-	// Get reference to the arrow material.
 	this->ArrowMaterial = UMaterialInstanceDynamic::Create(this->OpponentArrowIndicator->GetMaterial(0), this);
 }
 
-// Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -115,65 +115,62 @@ void APlayerCharacter::UpdateArrowIndicator()
 	}
 }
 
-void APlayerCharacter::MoveForward(float Value)
+void APlayerCharacter::MoveForward(const FInputActionValue& Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	float inputValue = Value.Get<float>();
+	if ((Controller != nullptr) && (inputValue != 0.0f))
 	{
-		// Find out which way is forward.
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// Get forward vector.
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		// Add movement in that direction.
-		AddMovementInput(Direction, Value);
+		this->AddMovementInput(Direction, inputValue);
 	}
 }
 
-void APlayerCharacter::MoveRight(float Value)
+void APlayerCharacter::MoveRight(const FInputActionValue& Value)
 {
-	if ( (Controller != nullptr) && (Value != 0.0f) )
+	float inputValue = Value.Get<float>();
+	if ( (Controller != nullptr) && (inputValue != 0.0f) )
 	{
-		// Find out which way is right.
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 	
-		// Get right vector. 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		
-		// Add movement in that direction.
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, inputValue);
 	}
 }
 
-// Called to bind functionality to input.
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Set up gameplay key bindings
-	check(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &APlayerCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("Move Right / Left", this, &APlayerCharacter::MoveRight);
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(this->MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+
+		EnhancedInputComponent->BindAction(this->MoveRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+	}
 }
 
 void APlayerCharacter::OtherCharacterTouched(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!ensure(OtherActor))
 	{
-		return; // OtherActor is null.
+		return;
 	}
 
 	auto OtherCharacter = Cast<AGridRunnerCharacterBase>(OtherActor);
 	if (!OtherCharacter)
 	{
-		return; // OtherActor is not the player or the opponent. Do nothing...for now.
+		return;
 	}
 
 	if (!this->bIsIt && !OtherCharacter->bIsIt)
 	{
-		return; // Neither character is IT yet. Do nothing.
+		return;
 	}
 
 	OtherCharacter->bIsIt = !OtherCharacter->bIsIt;
