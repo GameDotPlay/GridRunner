@@ -46,6 +46,5 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::NoHitKillTimerElapsed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Enter AProjectileBase::NoHitKillTimerElapsped()"));
 	this->Explode();
 }
