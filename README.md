@@ -5,7 +5,7 @@ I played it a lot growing up and I thought it would be a good exercise to implem
 ### Development Environment:
 - Unreal Engine 5.1.1 (From Epic Games Launcher, not full source code)
 - Visual Studio 2022 Professional v17.6.6
-- Visual Assist v10.9.2491
+- Visual Assist 2023.3
 
 ### Coding Standards and Style Guide:
 This project adheres to the [Epic C++ Coding Standard](https://docs.unrealengine.com/5.1/en-US/epic-cplusplus-coding-standard-for-unreal-engine/).
