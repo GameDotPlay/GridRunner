@@ -2,6 +2,8 @@
 This project is a copycat project of the Sega Saturn/PS1 game [GridRunner](https://en.wikipedia.org/wiki/Grid_Runner) from 1996 implemented in Unreal Engine 5.1.
 I played it a lot growing up and I thought it would be a good exercise to implement the game in Unreal Engine as a learning experience.
 
+![Original GridRunner](Docs/Images/GridRunner1996.jpg "Original GridRunner")  ![GridRunner in Unreal Engine](Docs/Images/GridRunnerUnreal.png "GridRunner in Unreal Engine")
+
 ### Development Environment:
 - Unreal Engine 5.1.1 (From Epic Games Launcher, not full source code)
 - Visual Studio 2022 Professional v17.6.6
