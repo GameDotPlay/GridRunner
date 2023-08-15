@@ -10,6 +10,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
+class UAttributeComponent;
+class UFireProjectileComponent;
 
 UCLASS()
 class GRIDRUNNER_API APlayerCharacter : public AGridRunnerCharacterBase
@@ -34,13 +36,19 @@ protected:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	USpringArmComponent* SpringArmComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+	UCameraComponent* FollowCamera = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* OpponentArrowIndicator;
+	UStaticMeshComponent* OpponentArrowIndicator = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
+	UAttributeComponent* AttributeComponent = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
+	UFireProjectileComponent* FireProjectileComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
 	float ArrowRadius = 250.f;
@@ -48,9 +56,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Player, meta = (AllowPrivateAccess = "true"))
 	float ArrowHeightOffset = 80.f;
 
-	AGridRunnerCharacterBase* OpponentCharacter;
+	AGridRunnerCharacterBase* OpponentCharacter = nullptr;
 
-	UMaterialInstanceDynamic* ArrowMaterial;
+	UMaterialInstanceDynamic* ArrowMaterial = nullptr;
 
 	bool IsOpponentOnScreen();
 
@@ -67,9 +75,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* MoveRightAction = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputAction* FireProjectileAction = nullptr;
+
 	void MoveForward(const FInputActionValue& Value);
 
 	void MoveRight(const FInputActionValue& Value);
+
+	void FireProjectile(const FInputActionValue& Value);
 
 #pragma endregion
 };

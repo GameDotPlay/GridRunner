@@ -10,18 +10,24 @@
 #include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputActionValue.h"
+#include "AttributeComponent.h"
+#include "FireProjectileComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
 	this->bIsPlayer = true;
 
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
+	this->SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	this->SpringArmComponent->SetupAttachment(RootComponent);
 
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	this->FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	this->FollowCamera->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 
-	OpponentArrowIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OpponentArrowIndicator"));
+	this->OpponentArrowIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OpponentArrowIndicator"));
+
+	this->AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
+
+	this->FireProjectileComponent = CreateDefaultSubobject<UFireProjectileComponent>(TEXT("FireProjectileComponent"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 1200.f;
@@ -143,6 +149,11 @@ void APlayerCharacter::MoveRight(const FInputActionValue& Value)
 	}
 }
 
+void APlayerCharacter::FireProjectile(const FInputActionValue& Value)
+{
+	this->FireProjectileComponent->CastAbility();
+}
+
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -152,6 +163,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(this->MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
 
 		EnhancedInputComponent->BindAction(this->MoveRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+
+		EnhancedInputComponent->BindAction(this->FireProjectileAction, ETriggerEvent::Triggered, this, &APlayerCharacter::FireProjectile);
 	}
 }
 
