@@ -4,10 +4,9 @@
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
-class UParticleSystem;
+class UNiagaraSystem;
 class USphereComponent;
 class UProjectileMovementComponent;
-class UParticleSystemComponent;
 
 UCLASS()
 class GRIDRUNNER_API AProjectileBase : public AActor
@@ -20,17 +19,17 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Effects")
-	UParticleSystem* ImpactVFX;
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Base")
+	UNiagaraSystem* ImpactEffect;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile Base")
 	USphereComponent* SphereComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile Base")
 	UProjectileMovementComponent* MoveComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UParticleSystemComponent* EffectComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ProjectileBase")
+	float MaxLifeTime;
 
 	UFUNCTION()
 	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -38,5 +37,12 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Explode();
 
-	virtual void PostInitializeComponents() override;
+	virtual void BeginPlay() override;
+
+private:
+
+	FTimerHandle NoHitKillTimer;
+
+	UFUNCTION()
+	void NoHitKillTimerElapsed();
 };
