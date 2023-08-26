@@ -6,6 +6,8 @@
 
 class UCharacterMovementComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFlagsChangedSignature, int32, NewFlags);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRIDRUNNER_API UAttributeComponent : public UActorComponent
 {
@@ -13,25 +15,28 @@ class GRIDRUNNER_API UAttributeComponent : public UActorComponent
 
 public:	
 
+	UPROPERTY(BlueprintAssignable)
+	FFlagsChangedSignature OnFlagsChanged;
+
 	UAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
-	void SetBaseMaxRunSpeed(int32 newBaseRunSpeed);
+	void SetBaseMaxRunSpeed(const int32 newBaseRunSpeed);
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyRunSpeedModifier(float modifier);
+	void ApplyRunSpeedModifier(const float modifier);
 
 	UFUNCTION(BlueprintCallable)
 	void ResetBaseMaxRunSpeed();
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyManaChange(int32 manaDelta);
+	void ApplyManaChange(const int32 manaDelta);
 
 	UFUNCTION(BlueprintCallable)
-	void SetCurrentMana(int32 newCurrentMana);
+	void SetCurrentMana(const int32 newCurrentMana);
 
 	UFUNCTION(BlueprintCallable)
-	void SetBaseMaxMana(int32 newBaseMaxMana);
+	void SetBaseMaxMana(const int32 newBaseMaxMana);
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetBaseMaxRunSpeed() const;
@@ -45,6 +50,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 GetCurrentMana() const;
 
+	UFUNCTION(BlueprintCallable)
+	int32 AddFlag();
+
+	UFUNCTION(BlueprintCallable)
+	int32 RemoveFlag();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentFlagsCount() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsIt() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsIt(const bool bIsIt);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -57,14 +77,16 @@ private:
 	int32 BaseMaxMana;
 
 	UPROPERTY(EditAnywhere, Category = "Attributes")
-	int32 MaxAllowedModifiedRunSpeed;
-
-	UPROPERTY(EditAnywhere, Category = "Attributes")
-	int32 CurrentMana;
-
-	UPROPERTY(EditAnywhere, Category = "Attributes")
 	int32 BaseMaxRunSpeed;
 
 	UPROPERTY(EditAnywhere, Category = "Attributes")
+	int32 MaxAllowedModifiedRunSpeed;
+
+	int32 CurrentMana;
+
 	int32 CurrentRunSpeed;
+
+	int32 CurrentFlagsCount = 0;
+
+	bool bIsIt = false;
 };

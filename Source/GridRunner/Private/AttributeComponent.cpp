@@ -8,7 +8,7 @@ UAttributeComponent::UAttributeComponent()
 	this->MaxAllowedModifiedRunSpeed = 3;
 }
 
-void UAttributeComponent::SetBaseMaxRunSpeed(int32 newBaseRunSpeed)
+void UAttributeComponent::SetBaseMaxRunSpeed(const int32 newBaseRunSpeed)
 {
 	if (newBaseRunSpeed < 0)
 	{
@@ -20,12 +20,12 @@ void UAttributeComponent::SetBaseMaxRunSpeed(int32 newBaseRunSpeed)
 	}
 }
 
-void UAttributeComponent::ApplyRunSpeedModifier(float modifier)
+void UAttributeComponent::ApplyRunSpeedModifier(const float modifier)
 {
 	if (ensureAlways(IsValid(this->MovementComponent)))
 	{
-		// Only allow up to double run speed modifier.
-		this->MovementComponent->MaxWalkSpeed = FMath::Clamp(this->MovementComponent->MaxWalkSpeed * modifier, 0, BaseMaxRunSpeed * this->MaxAllowedModifiedRunSpeed);
+		float minRunSpeed = this->BaseMaxRunSpeed * 0.5f;
+		this->MovementComponent->MaxWalkSpeed = FMath::Clamp(this->MovementComponent->MaxWalkSpeed * modifier, minRunSpeed, BaseMaxRunSpeed * this->MaxAllowedModifiedRunSpeed);
 	}
 }
 
@@ -37,26 +37,19 @@ void UAttributeComponent::ResetBaseMaxRunSpeed()
 	}
 }
 
-void UAttributeComponent::ApplyManaChange(int32 manaDelta)
+void UAttributeComponent::ApplyManaChange(const int32 manaDelta)
 {
 	this->CurrentMana = FMath::Clamp(this->CurrentMana += manaDelta, 0, this->BaseMaxMana);
 }
 
-void UAttributeComponent::SetCurrentMana(int32 newCurrentMana)
+void UAttributeComponent::SetCurrentMana(const int32 newCurrentMana)
 {
 	this->CurrentMana = FMath::Clamp(newCurrentMana, 0, this->BaseMaxMana);
 }
 
-void UAttributeComponent::SetBaseMaxMana(int32 newBaseMaxMana)
+void UAttributeComponent::SetBaseMaxMana(const int32 newBaseMaxMana)
 {
-	if (newBaseMaxMana < 0)
-	{
-		this->BaseMaxMana = 0;
-	}
-	else
-	{
-		this->BaseMaxMana = newBaseMaxMana;
-	}
+	this->BaseMaxMana = newBaseMaxMana < 0 ? 0 : newBaseMaxMana;
 }
 
 int32 UAttributeComponent::GetBaseMaxRunSpeed() const
@@ -77,6 +70,40 @@ int32 UAttributeComponent::GetBaseMaxMana() const
 int32 UAttributeComponent::GetCurrentMana() const
 {
 	return this->CurrentMana;
+}
+
+int32 UAttributeComponent::AddFlag()
+{
+	this->OnFlagsChanged.Broadcast(this->CurrentFlagsCount);
+	return this->CurrentFlagsCount + 1;
+}
+
+int32 UAttributeComponent::RemoveFlag()
+{
+	if (this->CurrentFlagsCount == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		this->OnFlagsChanged.Broadcast(this->CurrentFlagsCount);
+		return this->CurrentFlagsCount - 1;
+	}
+}
+
+int32 UAttributeComponent::GetCurrentFlagsCount() const
+{
+	return this->CurrentFlagsCount;
+}
+
+bool UAttributeComponent::GetIsIt() const
+{
+	return this->bIsIt;
+}
+
+void UAttributeComponent::SetIsIt(const bool bPlayerIsIt)
+{
+	this->bIsIt = bPlayerIsIt;
 }
 
 void UAttributeComponent::BeginPlay()
