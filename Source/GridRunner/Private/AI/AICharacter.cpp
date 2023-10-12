@@ -3,7 +3,7 @@
 #include "AI/AICharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "GridRunner/GridRunnerGameMode.h"
+#include "GridRunnerGameMode.h"
 
 AAICharacter::AAICharacter()
 {
